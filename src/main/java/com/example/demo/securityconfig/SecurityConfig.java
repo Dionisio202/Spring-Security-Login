@@ -34,19 +34,32 @@ public class SecurityConfig  {
         );
     }
 
+
     @Bean
     SecurityFilterChain security(HttpSecurity securityy) throws Exception {
-        return  securityy
+        return securityy.csrf().disable()
                 .formLogin(form -> form
                         .permitAll()
-                        .defaultSuccessUrl("/index.html", true) // Redirigir a index.html después de un inicio de sesión exitoso
+                        .defaultSuccessUrl("/prueba.html", true)
+                        .successHandler((request, response, authentication) -> {
+                            // Obtener el rol del usuario autenticado
+                            String role = authentication.getAuthorities().iterator().next().getAuthority();
+                            System.out.println("Rol del usuario autenticado: " + role);
+
+                            // Redirigir a una página según el rol (opcional)
+                            if ("ROLE_ADMIN".equals(role)) {
+                                response.sendRedirect("/index.html");
+                            } else {
+                                response.sendRedirect("/prueba.html");
+                            }
+                        })
                 )
                 .authorizeHttpRequests((auth -> auth.anyRequest().authenticated()))
                 .build();
     }
 
-
 /*
+
 @Bean
 public SecurityFilterChain filterchain(HttpSecurity httsecurity) throws Exception {
     return httsecurity
@@ -55,3 +68,5 @@ public SecurityFilterChain filterchain(HttpSecurity httsecurity) throws Exceptio
 */
 
 }
+
+
