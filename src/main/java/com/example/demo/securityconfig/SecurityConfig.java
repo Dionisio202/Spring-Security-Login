@@ -40,7 +40,7 @@ public class SecurityConfig  {
         return securityy.csrf().disable()
                 .formLogin(form -> form
                         .permitAll()
-                        .defaultSuccessUrl("/prueba.html", true)
+                        .defaultSuccessUrl("/user.html", true)
                         .successHandler((request, response, authentication) -> {
                             // Obtener el rol del usuario autenticado
                             String role = authentication.getAuthorities().iterator().next().getAuthority();
@@ -50,7 +50,7 @@ public class SecurityConfig  {
                             if ("ROLE_ADMIN".equals(role)) {
                                 response.sendRedirect("/index.html");
                             } else {
-                                response.sendRedirect("/prueba.html");
+                                response.sendRedirect("/user.html");
                             }
                         })
                 )
