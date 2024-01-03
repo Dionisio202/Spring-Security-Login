@@ -54,9 +54,15 @@ public class SecurityConfig  {
                             }
                         })
                 )
-                .authorizeHttpRequests((auth -> auth.anyRequest().authenticated()))
+                .authorizeRequests(authorize ->
+                        authorize
+                                .requestMatchers("/index.html").hasAuthority("ROLE_ADMIN")  // Bloquear acceso a index.html para ROLE_ADMIN
+                                .requestMatchers("/user.html").hasAuthority("ROLE_USER")
+                        .anyRequest().authenticated()
+                )
                 .build();
     }
+
 
 /*
 
