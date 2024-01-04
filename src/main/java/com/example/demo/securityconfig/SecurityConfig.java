@@ -1,12 +1,17 @@
 package com.example.demo.securityconfig;
 
+import com.example.demo.Controllers.ApiUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,25 +19,35 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig  {
-
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance(); // Esta no encripta las contraseñas, es solo para demostración.
     }
-
+    @Autowired
+    private ApiUser userApi;
     @Bean
     public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("user")
-                        .password(passwordEncoder().encode("123"))
-                        .roles("USER")
-                        .build(),
-                User.withUsername("admin")
-                        .password(passwordEncoder().encode("123"))
-                        .roles("ADMIN")
-                        .build()
-        );
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+
+                com.example.demo.model.User user = userApi.searchbyUserName(username);
+                if (user == null) {
+
+                    throw new UsernameNotFoundException("usuario no encontrado: " + username);
+
+                }
+
+                return org.springframework.security.core.userdetails.User
+                        .withUsername(user.getUsername())
+                        .password(user.getPassword())
+                        .roles(user.getRol())
+                        .build();
+            }
+        };
     }
+
 
 
     @Bean
@@ -54,15 +69,22 @@ public class SecurityConfig  {
                             }
                         })
                 )
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())  // Utiliza el AccessDeniedHandler personalizado
+                .and()
                 .authorizeRequests(authorize ->
                         authorize
                                 .requestMatchers("/index.html").hasAuthority("ROLE_ADMIN")  // Bloquear acceso a index.html para ROLE_ADMIN
                                 .requestMatchers("/user.html").hasAuthority("ROLE_USER")
+                                .requestMatchers("/rest/save/**", "/rest/edit/**", "/rest/delete/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .build();
     }
-
+    @Bean
+    public CustomAccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
 
 /*
 
