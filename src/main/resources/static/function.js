@@ -14,7 +14,8 @@ $(document).ready(function(){
                     "telefono": $('#telefono').val()
                 }),
                 success: function(response) {
-                    loadUsers(); // Actualizar la tabla después de agregar un estudiante
+                    loadUsers();
+                    $('#addNewUser').modal('hide');
                 }
             });
         });
@@ -33,7 +34,8 @@ $(document).ready(function(){
                         "telefono": $('#etelefono').val()
                     }),
                     success: function(response) {
-                        loadUsers(); // Actualizar la tabla después de editar un estudiante
+                        loadUsers();
+                         $('#editNewUser').modal('hide');
                     }
                 });
             });

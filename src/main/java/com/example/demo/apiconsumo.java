@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class apiconsumo {
 
-    @GetMapping("/loggin")
+    @GetMapping("/login")
     public String login() {
-        return "loggin"; // Esto debería redirigir a login.html
+        return "login"; // Esto debería redirigir a login.html
     }
 }

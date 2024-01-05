@@ -54,8 +54,12 @@ public class SecurityConfig  {
     SecurityFilterChain security(HttpSecurity securityy) throws Exception {
         return securityy.csrf().disable()
                 .formLogin(form -> form
+                        .loginPage("/login")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
                         .permitAll()
                         .defaultSuccessUrl("/user.html", true)
+                        .failureUrl("/login?error=true")  // Redirige aquí si hay un error de autenticación
                         .successHandler((request, response, authentication) -> {
                             // Obtener el rol del usuario autenticado
                             String role = authentication.getAuthorities().iterator().next().getAuthority();
