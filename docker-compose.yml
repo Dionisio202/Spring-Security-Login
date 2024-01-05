@@ -1,28 +1,12 @@
 version: '3.1'
 
 services:
-  database:
-    image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: edi
-      MYSQL_DATABASE: quinto
-      MYSQL_USER: edi
-      MYSQL_PASSWORD: edi
-    ports:
-      - 3306:3306
-    volumes:
-      - data:/var/lib/mysql  # Corrected volume path
-    networks:
-      - edi
-
   api:
     build: .
     restart: always
     ports:
-      - 4444:4444
-    depends_on:
-      - database
+      - 4444:80
+      - 4445:443
     networks:
       - edi
 
