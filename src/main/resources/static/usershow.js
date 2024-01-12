@@ -5,7 +5,7 @@ $(document).ready(function(){
 
 function loadUsers() {
     $.ajax({
-        url: "https://edi-api.onrender.com/rest/all",
+        url: "https://springlogin.onrender.com/rest/all",
         type: "GET",
         dataType: "json",
         success: function(data) {

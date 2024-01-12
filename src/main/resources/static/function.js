@@ -4,7 +4,7 @@ $(document).ready(function(){
             event.preventDefault(); // Evitar la recarga de la página
             $.ajax({
                 type: "POST",
-                url: "https://edi-api.onrender.com/rest/save/"+$('#cedula').val(), // Ruta para insertar un estudiante
+                url: "https://springlogin.onrender.com/rest/save/"+$('#cedula').val(), // Ruta para insertar un estudiante
                 dataType: "json",
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -24,7 +24,7 @@ $(document).ready(function(){
                 event.preventDefault(); // Evitar la recarga de la página
                 $.ajax({
                     type: "PUT",
-                    url: "https://edi-api.onrender.com/rest/edit/"+$('#ecedula').val(), // Ruta para editar un estudiante
+                    url: "https://springlogin.onrender.com/rest/edit/"+$('#ecedula').val(), // Ruta para editar un estudiante
                     dataType: "json",
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -52,7 +52,7 @@ $(document).ready(function(){
                         var currentRow = $(this).closest("tr");
                         var cedula = currentRow.find("td:eq(0)").text();
                         $.ajax({
-                            url: "https://edi-api.onrender.com/rest/delete/" + cedula, // Ruta para eliminar un estudiante
+                            url: "https://springlogin.onrender.com/rest/delete/" + cedula, // Ruta para eliminar un estudiante
                             type: "DELETE",
                             success: function(){
                                 loadUsers(); // Actualizar la tabla después de eliminar un estudiante
@@ -63,7 +63,7 @@ $(document).ready(function(){
 
 function loadUsers() {
     $.ajax({
-        url: "https://edi-api.onrender.com/rest/all",
+        url: "https://springlogin.onrender.com/rest/all",
         type: "GET",
         dataType: "json",
         success: function(data) {
